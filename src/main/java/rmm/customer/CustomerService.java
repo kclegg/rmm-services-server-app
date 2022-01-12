@@ -1,6 +1,6 @@
-package customer;
+package rmm.customer;
 
-import devices.Device;
+import rmm.devices.Device;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;

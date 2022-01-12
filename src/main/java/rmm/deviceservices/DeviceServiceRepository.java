@@ -1,4 +1,4 @@
-package deviceservices;
+package rmm.deviceservices;
 
 import org.springframework.stereotype.Repository;
 

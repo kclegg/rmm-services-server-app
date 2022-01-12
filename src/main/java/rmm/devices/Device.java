@@ -1,4 +1,4 @@
-package devices;
+package rmm.devices;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

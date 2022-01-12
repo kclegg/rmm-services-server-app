@@ -1,4 +1,4 @@
-package deviceservices;
+package rmm.deviceservices;
 
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;

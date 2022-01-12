@@ -1,4 +1,4 @@
-package devices;
+package rmm.devices;
 
 import org.springframework.stereotype.Service;
 

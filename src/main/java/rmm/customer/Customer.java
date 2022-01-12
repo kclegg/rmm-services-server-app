@@ -1,7 +1,7 @@
-package customer;
+package rmm.customer;
 
-import devices.Device;
-import devices.DeviceService;
+import rmm.devices.Device;
+import rmm.deviceservices.DeviceService;
 import lombok.Getter;
 import lombok.Setter;
 

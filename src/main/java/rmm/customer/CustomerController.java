@@ -1,8 +1,8 @@
-package customer;
+package rmm.customer;
 
-import common.exceptions.NotFoundException;
-import devices.Device;
-import devices.DeviceService;
+import rmm.exceptions.NotFoundException;
+import rmm.devices.Device;
+import rmm.devices.DeviceService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping(value = "/customer")
+@RequestMapping(value = "/rmm/customer")
 public class CustomerController {
     private final DeviceService deviceService;
     private final CustomerService customerService;
@@ -24,7 +24,7 @@ public class CustomerController {
     @GetMapping(value = "/{customerId}/getDevices")
     public ResponseEntity<List<Device>> getDevicesByCustomerId(@PathVariable String customerId) {
         List<Device> devices = Optional.of(customerService.findAllDevicesByCustomerId(customerId))
-                .orElseThrow(() -> new NotFoundException("No customer found by customer id: " + customerId));
+                .orElseThrow(() -> new NotFoundException("No rmm.customer found by rmm.customer id: " + customerId));
 
         return new ResponseEntity<>(devices, HttpStatus.OK);
     }
@@ -51,7 +51,7 @@ public class CustomerController {
             throw new NotFoundException("Customer " + customerId + " doesn't contain existing device by id: " + device.getId());
         }
 
-//        customer = customerService.updateExistingDevice();
+//        rmm.customer = customerService.updateExistingDevice();
 
         return new ResponseEntity<>(customer, HttpStatus.OK);
     }
@@ -69,6 +69,6 @@ public class CustomerController {
 
     private Customer findExistingCustomer(String customerId) {
         return customerService.findCustomerById(customerId)
-                .orElseThrow(() -> new NotFoundException("No customer found by customer id: " + customerId));
+                .orElseThrow(() -> new NotFoundException("No rmm.customer found by rmm.customer id: " + customerId));
     }
 }

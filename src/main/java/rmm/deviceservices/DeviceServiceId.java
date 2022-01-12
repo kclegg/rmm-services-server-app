@@ -1,6 +1,6 @@
-package deviceservices;
+package rmm.deviceservices;
 
-import devices.DeviceType;
+import rmm.devices.DeviceType;
 
 import javax.persistence.Embeddable;
 import javax.persistence.EnumType;

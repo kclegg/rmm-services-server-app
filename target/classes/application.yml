@@ -1,4 +1,13 @@
 spring:
   jpa:
     hibernate:
-      ddl-auto: validate
+      ddl-auto: 'create-drop'
+    database-platform: org.hibernate.dialect.H2Dialect
+  h2:
+    console:
+      enabled: true
+  datasource:
+    url: jdbc:h2:mem:dcbapp
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: password

@@ -1,4 +1,4 @@
-package devices;
+package rmm.devices;
 
 public enum DeviceType {
     Mac,
