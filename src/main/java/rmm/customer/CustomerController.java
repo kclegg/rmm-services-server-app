@@ -1,5 +1,6 @@
 package rmm.customer;
 
+import rmm.deviceservices.DeviceServicePlanService;
 import rmm.exceptions.NotFoundException;
 import rmm.devices.Device;
 import rmm.devices.DeviceService;
@@ -15,20 +16,33 @@ import java.util.Optional;
 public class CustomerController {
     private final DeviceService deviceService;
     private final CustomerService customerService;
+    private final DeviceServicePlanService deviceServicePlanService;
 
-    public CustomerController(DeviceService deviceService, CustomerService customerService) {
+    public CustomerController(DeviceService deviceService, CustomerService customerService, DeviceServicePlanService deviceServicePlanService) {
         this.deviceService = deviceService;
         this.customerService = customerService;
+        this.deviceServicePlanService = deviceServicePlanService;
     }
 
     @GetMapping(value = "/{customerId}/getDevices")
     public ResponseEntity<List<Device>> getDevicesByCustomerId(@PathVariable String customerId) {
         List<Device> devices = Optional.of(customerService.findAllDevicesByCustomerId(customerId))
-                .orElseThrow(() -> new NotFoundException("No rmm.customer found by rmm.customer id: " + customerId));
+                .orElseThrow(() -> new NotFoundException("No Customer found by Customer ID: " + customerId));
 
         return new ResponseEntity<>(devices, HttpStatus.OK);
     }
 
+    @GetMapping(value = "/{customerId}/computeMonthlyBill")
+    public ResponseEntity<Integer> getMonthlyBillByCustomerId(@PathVariable String customerId) {
+        Customer customer = findExistingCustomer(customerId);
+
+        // TODO: fixme
+        int monthlyBill = deviceServicePlanService.calculateMonthlyBill(customer.getServices());
+
+        return new ResponseEntity<>(monthlyBill, HttpStatus.OK);
+    }
+
+    // TODO: @Post Or @Put ..??
     @PostMapping(value = "/{customerId}/addDevices")
     public ResponseEntity<Customer> addDevicesByCustomerId(@PathVariable String customerId, @RequestBody Device device) {
         Customer customer = findExistingCustomer(customerId);
@@ -51,6 +65,7 @@ public class CustomerController {
             throw new NotFoundException("Customer " + customerId + " doesn't contain existing device by id: " + device.getId());
         }
 
+        // TODO: Update existing
 //        rmm.customer = customerService.updateExistingDevice();
 
         return new ResponseEntity<>(customer, HttpStatus.OK);
@@ -69,6 +84,6 @@ public class CustomerController {
 
     private Customer findExistingCustomer(String customerId) {
         return customerService.findCustomerById(customerId)
-                .orElseThrow(() -> new NotFoundException("No rmm.customer found by rmm.customer id: " + customerId));
+                .orElseThrow(() -> new NotFoundException("No Customer found by Customer ID: " + customerId));
     }
 }

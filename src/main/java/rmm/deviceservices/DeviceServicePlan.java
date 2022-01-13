@@ -1,11 +1,14 @@
 package rmm.deviceservices;
 
+import lombok.Getter;
+
 import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 
 @Entity
-public class DeviceService {
+@Getter
+public class DeviceServicePlan {
 
     @EmbeddedId
-    private DeviceServiceId id;
+    private DeviceServicePlanId id;
 }

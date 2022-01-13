@@ -1,7 +1,7 @@
 package rmm.customer;
 
 import rmm.devices.Device;
-import rmm.deviceservices.DeviceService;
+import rmm.deviceservices.DeviceServicePlan;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -23,5 +23,5 @@ public class Customer {
     private List<Device> devices;
 
     @OneToMany
-    private Set<DeviceService> services;
+    private Set<DeviceServicePlan> services;
 }

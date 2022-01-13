@@ -18,7 +18,6 @@
         <java.version>11</java.version>
         <lombok.version>1.18.22</lombok.version>
         <springdoc.version>1.6.3</springdoc.version>
-        <springfox.version>3.0.0</springfox.version>
     </properties>
 
     <dependencies>
