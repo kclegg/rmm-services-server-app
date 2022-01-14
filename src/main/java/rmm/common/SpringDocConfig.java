@@ -9,12 +9,10 @@ import org.springframework.context.annotation.Configuration;
 public class SpringDocConfig {
 
     // TODO: Secure Endpoints
-    // TODO: Add Gitignore
     // TODO: Determine how to insert into DB on runtime (use postgresql ??)
-    // TODO: Implement monthly bill endpoint for current state of customer data
-    // TODO: Update README
+    // TODO: Test README instructions (update for any changes)
     // TODO: Implement GET, DELETE, ADD (no duplicates) Device Services endpoints
-    // http://localhost:8080/swagger-ui/index.html
+    // TODO: Implement Testing
 
     @Bean
     public OpenAPI initSpringDoc() {

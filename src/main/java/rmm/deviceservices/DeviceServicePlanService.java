@@ -2,26 +2,23 @@ package rmm.deviceservices;
 
 import org.springframework.stereotype.Service;
 import rmm.devices.Device;
+import rmm.devices.DeviceType;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class DeviceServicePlanService {
 
-    public DeviceServicePlanService(DeviceServicePlanRepository deviceServicePlanRepository) {
-
-    }
-
     public int calculateMonthlyBill(List<Device> devices, Set<DeviceServicePlan> servicePlans) {
-        // TODO: Fixme, not exactly right for case where customer
-        //  has more than 1 device (since services don't all duplicates)...
-
-        // get device type counts ???? then multiple ???
+        Map<DeviceType, Integer> deviceCounts = devices.stream()
+                .collect(Collectors.groupingBy(Device::getType, Collectors.summingInt(device -> 1)));
 
         return servicePlans.stream()
                 .map(DeviceServicePlan::getId)
-                .map(DeviceServicePlanId::getPrice)
+                .map(deviceServicePlanId -> (deviceCounts.getOrDefault(deviceServicePlanId.getDeviceType(), 0) * deviceServicePlanId.getPrice()))
                 .mapToInt(Integer::intValue)
                 .sum();
     }

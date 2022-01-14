@@ -18,6 +18,6 @@ public class DeviceServicePlanId implements Serializable {
     @Enumerated(EnumType.STRING)
     private DeviceType deviceType;
 
-    private int price; //TODO: decide if int or double...
+    private int price;
 
 }

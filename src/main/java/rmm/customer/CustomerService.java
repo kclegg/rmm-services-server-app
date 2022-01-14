@@ -2,10 +2,11 @@ package rmm.customer;
 
 import rmm.devices.Device;
 import org.springframework.stereotype.Service;
+import rmm.deviceservices.DeviceServicePlan;
+import rmm.exceptions.NotFoundException;
 
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class CustomerService {
@@ -16,14 +17,17 @@ public class CustomerService {
         this.customerRepository = customerRepository;
     }
 
-    public Optional<Customer> findCustomerById(String customerId) {
-        return customerRepository.findById(customerId);
+    public Customer findCustomerById(String customerId) {
+        return customerRepository.findById(customerId)
+                .orElseThrow(() -> new NotFoundException("No Customer found by Customer ID: " + customerId));
     }
 
     public List<Device> findAllDevicesByCustomerId(String customerId) {
-        return findCustomerById(customerId)
-                .map(Customer::getDevices)
-                .orElse(Collections.emptyList());
+        return findCustomerById(customerId).getDevices();
+    }
+
+    public Set<DeviceServicePlan> findAllDeviceServicePlansByCustomerId(String customerId) {
+        return findCustomerById(customerId).getServices();
     }
 
     public Customer deleteCustomerDevice(Customer customer, String deviceId) {
