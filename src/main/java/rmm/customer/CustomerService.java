@@ -34,10 +34,8 @@ public class CustomerService {
         List<Device> devices = customer.getDevices();
 
         devices.forEach(device -> {
-            if(device.getId().equals(deviceId)) {
-                devices.removeIf(d -> d.getId().equals(deviceId));
-                customer.setDevices(devices);
-            }
+            devices.removeIf(d -> d.getId().equals(deviceId));
+            customer.setDevices(devices);
         });
 
         return customerRepository.save(customer);

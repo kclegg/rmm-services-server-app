@@ -69,7 +69,7 @@ public class CustomerController {
         return null;
     }
 
-    @PutMapping(value = "/{customerId}/updateDevices")
+    @PatchMapping(value = "/{customerId}/updateDevices")
     public ResponseEntity<Customer> updateDevicesByCustomerId(@PathVariable String customerId, @RequestBody Device device) {
         Customer customer = customerService.findCustomerById(customerId);
 

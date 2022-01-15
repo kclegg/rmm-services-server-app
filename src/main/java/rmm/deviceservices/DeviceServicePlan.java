@@ -11,4 +11,6 @@ public class DeviceServicePlan {
 
     @EmbeddedId
     private DeviceServicePlanId id;
+
+    private String description;
 }

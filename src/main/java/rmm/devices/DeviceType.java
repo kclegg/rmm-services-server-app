@@ -4,5 +4,6 @@ public enum DeviceType {
     Mac,
     Server,
     Windows,
-    WindowsWorkstation;
+    WindowsWorkstation,
+    NotApplicable;
 }

@@ -9,9 +9,11 @@ import org.springframework.context.annotation.Configuration;
 public class SpringDocConfig {
 
     // TODO: Secure Endpoints
+    // TODO: Endpoints Implement:
+    //          POST (ADD), PATCH (UPDATE) Devices
+    //          DELETE, ADD (no duplicates) Device Service Plan endpoints
     // TODO: Determine how to insert into DB on runtime (use postgresql ??)
     // TODO: Test README instructions (update for any changes)
-    // TODO: Implement GET, DELETE, ADD (no duplicates) Device Services endpoints
     // TODO: Implement Testing
 
     @Bean
