@@ -16,6 +16,8 @@ public class DeviceServicePlanService {
         Map<DeviceType, Integer> deviceCounts = devices.stream()
                 .collect(Collectors.groupingBy(Device::getType, Collectors.summingInt(device -> 1)));
 
+        // TODO: Still need to add initial cost of devices
+
         return servicePlans.stream()
                 .map(DeviceServicePlan::getId)
                 .map(deviceServicePlanId -> (deviceCounts.getOrDefault(deviceServicePlanId.getDeviceType(), 0) * deviceServicePlanId.getPrice()))

@@ -6,6 +6,7 @@ import rmm.devices.DeviceType;
 import javax.persistence.Embeddable;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import javax.validation.constraints.Min;
 import java.io.Serializable;
 
 @Embeddable
@@ -18,6 +19,7 @@ public class DeviceServicePlanId implements Serializable {
     @Enumerated(EnumType.STRING)
     private DeviceType deviceType;
 
+    @Min(value = 0, message = "Cannot store negative priced services")
     private int price;
 
 }

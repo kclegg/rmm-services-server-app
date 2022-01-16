@@ -1,9 +1,8 @@
 package rmm.devices;
 
 public enum DeviceType {
-    Mac,
-    Server,
-    Windows,
-    WindowsWorkstation,
-    NotApplicable;
+    MAC,
+    WINDOWS_SERVER,
+    WINDOWS_WORKSTATION,
+    NOT_APPLICABLE;
 }

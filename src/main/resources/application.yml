@@ -1,16 +1,15 @@
 spring:
   jpa:
     hibernate:
-      ddl-auto: 'create-drop'
-    database-platform: org.hibernate.dialect.H2Dialect
-  h2:
-    console:
-      enabled: true
+      ddl-auto: 'update'
+    show-sql: true
+    database-platform: org.hibernate.dialect.PostgreSQL9Dialect
   datasource:
-    url: jdbc:h2:mem:dcbapp
-    driver-class-name: org.h2.Driver
-    username: sa
-    password: password
+    platform: postgres
+    url: jdbc:postgresql://castor.db.elephantsql.com:5432/
+    username: ltlaryls
+    password: A6YWxJX8_pdWX-IecBz3KanqHJU_W-8A
+    driver-class-name: org.postgresql.Driver
 
 server:
   error:
