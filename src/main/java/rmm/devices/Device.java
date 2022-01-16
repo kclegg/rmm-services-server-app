@@ -12,6 +12,7 @@ import javax.persistence.*;
 public class Device {
 
     @Id
+    @GeneratedValue
     private final String id;
 
     @NonNull
