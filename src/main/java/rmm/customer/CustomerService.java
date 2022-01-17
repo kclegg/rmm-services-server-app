@@ -3,9 +3,11 @@ package rmm.customer;
 import rmm.devices.Device;
 import org.springframework.stereotype.Service;
 import rmm.deviceservices.DeviceServicePlan;
+import rmm.exceptions.InvalidRequestException;
 import rmm.exceptions.NotFoundException;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @Service
@@ -31,13 +33,13 @@ public class CustomerService {
     }
 
     public Customer updateExistingDevice(Customer customer, Device newDevice) {
-        List<Device> devices = customer.getDevices();
         List<String> deviceIds = customer.getDeviceIds();
 
         if(!deviceIds.contains(newDevice.getId())) {
             throw new NotFoundException("Customer " + customer.getId() + " doesn't contain existing device by id: " + newDevice.getId());
         }
 
+        List<Device> devices = customer.getDevices();
         devices.forEach(device -> {
             if(device.getId().equals(newDevice.getId())) {
                 device.setName(newDevice.getName());
@@ -59,11 +61,28 @@ public class CustomerService {
     }
 
     public Customer saveNewDevice(Customer customer, Device device) {
-        List<Device> devices = customer.getDevices();
-        devices.add(device);
-        customer.setDevices(devices);
+        List<String> deviceIds = customer.getDeviceIds();
 
+        if(Objects.isNull(deviceIds) || deviceIds.isEmpty() || !deviceIds.contains(device.getId())) {
+            List<Device> devices = customer.getDevices();
+            devices.add(device);
+            customer.setDevices(devices);
+        } else {
+            throw new InvalidRequestException("Customer " + customer.getId() + " already contains device " + device.getId());
+        }
         return customerRepository.save(customer);
     }
 
+    public Customer saveNewDeviceServicePlan(Customer customer, DeviceServicePlan servicePlan) {
+        Set<String> dspIds = customer.getServicePlanIds();
+
+        if(Objects.isNull(dspIds) || dspIds.isEmpty() || !dspIds.contains(servicePlan.getId())) {
+            Set<DeviceServicePlan> servicePlans = customer.getServices();
+            servicePlans.add(servicePlan);
+            customer.setServices(servicePlans);
+        } else {
+            throw new InvalidRequestException("Customer " + customer.getId() + " already contains device service plan " + servicePlan.getId());
+        }
+        return customerRepository.save(customer);
+    }
 }

@@ -35,4 +35,9 @@ public class Customer {
     public List<String> getDeviceIds() {
         return devices.stream().map(Device::getId).collect(Collectors.toList());
     }
+
+    @JsonIgnore
+    public Set<String> getServicePlanIds() {
+        return services.stream().map(DeviceServicePlan::getId).collect(Collectors.toSet());
+    }
 }

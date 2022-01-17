@@ -55,22 +55,22 @@ public class CustomerController {
             deviceService.saveNewDevice(device);
         }
 
-        List<String> deviceIds = customer.getDeviceIds();
+        customer = customerService.saveNewDevice(customer, device);
 
-        if(Objects.isNull(deviceIds) || deviceIds.isEmpty() || !deviceIds.contains(device.getId())) {
-            customer = customerService.saveNewDevice(customer, device);
-        } else {
-            throw new InvalidRequestException("Customer " + customerId + " already contains device " + device.getId());
-        }
         return new ResponseEntity<>(customer, HttpStatus.OK);
     }
 
     @PostMapping(value = "/{customerId}/addDeviceServices")
-    public ResponseEntity<Customer> addDeviceServicesByCustomerId(@PathVariable String customerId, @RequestBody DeviceServicePlan deviceService) {
+    public ResponseEntity<Customer> addDeviceServicesByCustomerId(@PathVariable String customerId, @RequestBody DeviceServicePlan deviceServicePlan) {
         Customer customer = customerService.findCustomerById(customerId);
 
-        // TODO: implement me
-        return null;
+        if(deviceServicePlanService.deviceServicePlanDoesNotExist(deviceServicePlan.getId())) {
+            deviceServicePlanService.saveNewDeviceServicePlan(deviceServicePlan);
+        }
+
+        customer = customerService.saveNewDeviceServicePlan(customer, deviceServicePlan);
+
+        return new ResponseEntity<>(customer, HttpStatus.OK);
     }
 
     @PatchMapping(value = "/{customerId}/updateDevices")
@@ -96,7 +96,7 @@ public class CustomerController {
     }
 
     @DeleteMapping(value = "/{customerId}/removeDeviceServices")
-    public ResponseEntity<Customer> deleteDeviceServicesByCustomerId(@PathVariable String customerId, @RequestBody DeviceServicePlan deviceService) {
+    public ResponseEntity<Customer> deleteDeviceServicesByCustomerId(@PathVariable String customerId, @RequestBody DeviceServicePlan deviceServicePlan) {
 
         // TODO: implement me
         return null;

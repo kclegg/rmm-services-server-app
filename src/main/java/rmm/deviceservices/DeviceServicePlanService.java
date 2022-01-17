@@ -23,6 +23,14 @@ public class DeviceServicePlanService {
         return deviceServicePlanRepository.findAll();
     }
 
+    public boolean deviceServicePlanDoesNotExist(String dspId) {
+        return !deviceServicePlanRepository.existsById(dspId);
+    }
+
+    public DeviceServicePlan saveNewDeviceServicePlan(DeviceServicePlan deviceServicePlan) {
+        return deviceServicePlanRepository.save(deviceServicePlan);
+    }
+
     public int calculateMonthlyBill(List<Device> devices, Set<DeviceServicePlan> servicePlans) {
         Map<DeviceType, Integer> deviceCounts = devices.stream()
                 .collect(Collectors.groupingBy(Device::getType, Collectors.summingInt(device -> 1)));
