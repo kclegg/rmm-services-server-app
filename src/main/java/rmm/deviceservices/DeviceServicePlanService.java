@@ -1,6 +1,5 @@
 package rmm.deviceservices;
 
-import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import rmm.devices.Device;
 import rmm.devices.DeviceType;
@@ -28,13 +27,24 @@ public class DeviceServicePlanService {
         Map<DeviceType, Integer> deviceCounts = devices.stream()
                 .collect(Collectors.groupingBy(Device::getType, Collectors.summingInt(device -> 1)));
 
-        int totalDeviceCost = (STANDARD_DEVICE_FEE * deviceCounts.values().stream().mapToInt(Integer::intValue).sum());
+        int totalDeviceQuantity = (deviceCounts.values().stream().mapToInt(Integer::intValue).sum());
+        int maxDeviceCost = totalDeviceQuantity * STANDARD_DEVICE_FEE;
 
-        int totalServicePlanCost = servicePlans.stream()
-                .map(deviceServicePlanId -> Pair.of(deviceServicePlanId.getDeviceType(), deviceServicePlanId.getPrice()))
-                .map(pair -> (deviceCounts.getOrDefault(pair.getFirst(), 0) * pair.getSecond()))
-                .mapToInt(Integer::intValue)
-                .sum();
+        int totalDeviceCost = 0;
+        int totalServicePlanCost = 0;
+
+        for(DeviceServicePlan servicePlan : servicePlans) {
+            if(servicePlan.getDeviceType() == DeviceType.ALL_DEVICES) {
+                totalDeviceCost = maxDeviceCost;
+                totalServicePlanCost += totalDeviceQuantity * servicePlan.getPrice();
+            }
+            int deviceQuantity = deviceCounts.getOrDefault(servicePlan.getDeviceType(), 0);
+
+            if(totalDeviceCost != maxDeviceCost) {
+                totalDeviceCost += (deviceQuantity * STANDARD_DEVICE_FEE);
+            }
+            totalServicePlanCost += (deviceQuantity * servicePlan.getPrice());
+        }
 
         return Integer.sum(totalDeviceCost, totalServicePlanCost);
     }

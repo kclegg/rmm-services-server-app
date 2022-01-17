@@ -4,5 +4,5 @@ public enum DeviceType {
     MAC,
     WINDOWS_SERVER,
     WINDOWS_WORKSTATION,
-    NOT_APPLICABLE;
+    ALL_DEVICES;
 }
