@@ -51,25 +51,10 @@ public class CustomerService {
         return customerRepository.save(customer);
     }
 
-    public Customer deleteCustomerDevice(Customer customer, String deviceId) {
-        List<Device> devices = customer.getDevices();
-
-        devices.removeIf(device -> device.getId().equals(deviceId));
-        customer.setDevices(devices);
-
-        return customerRepository.save(customer);
-    }
-
     public Customer saveNewDevice(Customer customer, Device device) {
-        List<String> deviceIds = customer.getDeviceIds();
-
-        if(Objects.isNull(deviceIds) || deviceIds.isEmpty() || !deviceIds.contains(device.getId())) {
-            List<Device> devices = customer.getDevices();
-            devices.add(device);
-            customer.setDevices(devices);
-        } else {
-            throw new InvalidRequestException("Customer " + customer.getId() + " already contains device " + device.getId());
-        }
+        List<Device> devices = customer.getDevices();
+        devices.add(device);
+        customer.setDevices(devices);
         return customerRepository.save(customer);
     }
 
@@ -82,6 +67,32 @@ public class CustomerService {
             customer.setServices(servicePlans);
         } else {
             throw new InvalidRequestException("Customer " + customer.getId() + " already contains device service plan " + servicePlan.getId());
+        }
+        return customerRepository.save(customer);
+    }
+
+    public Customer deleteCustomerDevice(Customer customer, String deviceId) {
+        List<String> deviceIds = customer.getDeviceIds();
+
+        if(Objects.nonNull(deviceIds) && !deviceIds.isEmpty() && deviceIds.contains(deviceId)) {
+            List<Device> devices = customer.getDevices();
+            devices.removeIf(device -> device.getId().equals(deviceId));
+            customer.setDevices(devices);
+        } else {
+            throw new InvalidRequestException("Customer " + customer.getId() + " does not contain device " + deviceId);
+        }
+        return customerRepository.save(customer);
+    }
+
+    public Customer deleteCustomerDeviceServicePlan(Customer customer, String deviceServicePlanId) {
+        Set<String> dspIds = customer.getServicePlanIds();
+
+        if(Objects.nonNull(dspIds) && !dspIds.isEmpty() && dspIds.contains(deviceServicePlanId)) {
+            Set<DeviceServicePlan> servicePlans = customer.getServices();
+            servicePlans.removeIf(servicePlan -> servicePlan.getId().equals(deviceServicePlanId));
+            customer.setServices(servicePlans);
+        } else {
+            throw new InvalidRequestException("Customer " + customer.getId() + " does not contain device service plan " + deviceServicePlanId);
         }
         return customerRepository.save(customer);
     }

@@ -83,22 +83,20 @@ public class CustomerController {
     }
 
     @DeleteMapping(value = "/{customerId}/removeDevices")
-    public ResponseEntity<Customer> deleteDeviceByCustomerId(@PathVariable String customerId, @RequestParam String deviceId) {
+    public ResponseEntity<Customer> deleteCustomerDeviceByDeviceId(@PathVariable String customerId, @RequestParam String deviceId) {
         Customer customer = customerService.findCustomerById(customerId);
-        List<String> deviceIds = customer.getDeviceIds();
 
-        if(Objects.nonNull(deviceIds) && !deviceIds.isEmpty() && deviceIds.contains(deviceId)) {
-            customer = customerService.deleteCustomerDevice(customer, deviceId);
-        } else {
-            throw new InvalidRequestException("Customer " + customerId + " does not contain device " + deviceId);
-        }
+        customer = customerService.deleteCustomerDevice(customer, deviceId);
+
         return new ResponseEntity<>(customer, HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{customerId}/removeDeviceServices")
-    public ResponseEntity<Customer> deleteDeviceServicesByCustomerId(@PathVariable String customerId, @RequestBody DeviceServicePlan deviceServicePlan) {
+    public ResponseEntity<Customer> deleteCustomerDeviceServicesByDeviceServicePlanId(@PathVariable String customerId, @RequestParam String deviceServicePlanId) {
+        Customer customer = customerService.findCustomerById(customerId);
 
-        // TODO: implement me
-        return null;
+        customer = customerService.deleteCustomerDeviceServicePlan(customer, deviceServicePlanId);
+
+        return new ResponseEntity<>(customer, HttpStatus.OK);
     }
 }
