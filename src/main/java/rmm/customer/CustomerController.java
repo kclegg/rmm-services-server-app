@@ -7,10 +7,8 @@ import rmm.devices.DeviceService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import rmm.exceptions.InvalidRequestException;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 @RestController
@@ -24,6 +22,12 @@ public class CustomerController {
         this.deviceService = deviceService;
         this.customerService = customerService;
         this.deviceServicePlanService = deviceServicePlanService;
+    }
+
+    @GetMapping(value = "/{customerId}/")
+    public ResponseEntity<Customer> getCustomerByCustomerId(@PathVariable String customerId) {
+        Customer customer = customerService.findCustomerById(customerId);
+        return new ResponseEntity<>(customer, HttpStatus.OK);
     }
 
     @GetMapping(value = "/{customerId}/getDevices")
