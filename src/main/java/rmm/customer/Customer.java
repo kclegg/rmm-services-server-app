@@ -1,5 +1,7 @@
 package rmm.customer;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import rmm.devices.Device;
 import rmm.deviceservices.DeviceServicePlan;
 import lombok.Getter;
@@ -15,6 +17,8 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class Customer {
 
     @Id

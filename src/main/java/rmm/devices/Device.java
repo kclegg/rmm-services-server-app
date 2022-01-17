@@ -2,6 +2,7 @@ package rmm.devices;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.lang.NonNull;
 
 import javax.persistence.*;
@@ -9,17 +10,18 @@ import javax.persistence.*;
 @Entity
 @Getter
 @AllArgsConstructor
+@NoArgsConstructor
 public class Device {
 
     @Id
     @GeneratedValue
-    private final String id;
+    private String id;
 
     @NonNull
-    private final String name;
+    private String name;
 
     @NonNull
     @Enumerated(EnumType.STRING)
-    private final DeviceType type;
+    private DeviceType type;
 
 }

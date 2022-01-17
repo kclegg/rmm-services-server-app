@@ -1,7 +1,8 @@
 package rmm.deviceservices;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.hibernate.annotations.SQLInsert;
+import lombok.NoArgsConstructor;
 import rmm.devices.DeviceType;
 
 import javax.persistence.*;
@@ -9,7 +10,8 @@ import javax.validation.constraints.Min;
 
 @Entity
 @Getter
-@SQLInsert(sql = "/insert-deviceserviceplan-data.sql")
+@AllArgsConstructor
+@NoArgsConstructor
 public class DeviceServicePlan {
 
     @Id
