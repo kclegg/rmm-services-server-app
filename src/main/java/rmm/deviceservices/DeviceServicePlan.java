@@ -15,7 +15,6 @@ import javax.validation.constraints.Min;
 public class DeviceServicePlan {
 
     @Id
-    @GeneratedValue
     private String id;
 
     private String serviceName;

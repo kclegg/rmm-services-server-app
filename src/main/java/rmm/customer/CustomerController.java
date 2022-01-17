@@ -2,14 +2,15 @@ package rmm.customer;
 
 import rmm.deviceservices.DeviceServicePlan;
 import rmm.deviceservices.DeviceServicePlanService;
-import rmm.exceptions.NotFoundException;
 import rmm.devices.Device;
 import rmm.devices.DeviceService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import rmm.exceptions.InvalidRequestException;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @RestController
@@ -51,13 +52,16 @@ public class CustomerController {
         Customer customer = customerService.findCustomerById(customerId);
 
         if(deviceService.deviceDoesNotExist(device.getId())) {
-            // TODO: Should we be saving a new DEVICE or only let
-            //  them add those which already exist in DEVICE table ???
             deviceService.saveNewDevice(device);
         }
 
-        customer = customerService.saveNewDevice(customer, device);
+        List<String> deviceIds = customer.getDeviceIds();
 
+        if(Objects.isNull(deviceIds) || deviceIds.isEmpty() || !deviceIds.contains(device.getId())) {
+            customer = customerService.saveNewDevice(customer, device);
+        } else {
+            throw new InvalidRequestException("Customer " + customerId + " already contains device " + device.getId());
+        }
         return new ResponseEntity<>(customer, HttpStatus.OK);
     }
 
@@ -73,12 +77,7 @@ public class CustomerController {
     public ResponseEntity<Customer> updateDevicesByCustomerId(@PathVariable String customerId, @RequestBody Device device) {
         Customer customer = customerService.findCustomerById(customerId);
 
-        if(deviceService.deviceDoesNotExist(device.getId())) {
-            throw new NotFoundException("Customer " + customerId + " doesn't contain existing device by id: " + device.getId());
-        }
-
-        // TODO: Update existing devices
-//        customer = customerService.updateExistingDevice();
+        customer = customerService.updateExistingDevice(customer, device);
 
         return new ResponseEntity<>(customer, HttpStatus.OK);
     }
@@ -88,7 +87,7 @@ public class CustomerController {
         Customer customer = customerService.findCustomerById(customerId);
         List<Device> devices = customer.getDevices();
 
-        if(!devices.isEmpty()) {
+        if(Objects.nonNull(devices) && !devices.isEmpty()) {
             customer = customerService.deleteCustomerDevice(customer, deviceId);
         }
         return new ResponseEntity<>(customer, HttpStatus.OK);

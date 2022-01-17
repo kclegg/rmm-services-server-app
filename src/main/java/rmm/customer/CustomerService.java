@@ -30,13 +30,30 @@ public class CustomerService {
         return findCustomerById(customerId).getServices();
     }
 
+    public Customer updateExistingDevice(Customer customer, Device newDevice) {
+        List<Device> devices = customer.getDevices();
+        List<String> deviceIds = customer.getDeviceIds();
+
+        if(!deviceIds.contains(newDevice.getId())) {
+            throw new NotFoundException("Customer " + customer.getId() + " doesn't contain existing device by id: " + newDevice.getId());
+        }
+
+        devices.forEach(device -> {
+            if(device.getId().equals(newDevice.getId())) {
+                device.setName(newDevice.getName());
+                device.setType(newDevice.getType());
+            }
+        });
+        customer.setDevices(devices);
+
+        return customerRepository.save(customer);
+    }
+
     public Customer deleteCustomerDevice(Customer customer, String deviceId) {
         List<Device> devices = customer.getDevices();
 
-        devices.forEach(device -> {
-            devices.removeIf(d -> d.getId().equals(deviceId));
-            customer.setDevices(devices);
-        });
+        devices.removeIf(device -> device.getId().equals(deviceId));
+        customer.setDevices(devices);
 
         return customerRepository.save(customer);
     }

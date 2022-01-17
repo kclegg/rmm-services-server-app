@@ -1,5 +1,6 @@
 package rmm.customer;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import rmm.devices.Device;
@@ -8,11 +9,11 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -22,7 +23,6 @@ import java.util.Set;
 public class Customer {
 
     @Id
-    @GeneratedValue
     private String id;
 
     @OneToMany
@@ -30,4 +30,9 @@ public class Customer {
 
     @OneToMany
     private Set<DeviceServicePlan> services;
+
+    @JsonIgnore
+    public List<String> getDeviceIds() {
+        return devices.stream().map(Device::getId).collect(Collectors.toList());
+    }
 }
