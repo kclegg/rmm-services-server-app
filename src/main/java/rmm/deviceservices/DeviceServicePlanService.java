@@ -1,5 +1,6 @@
 package rmm.deviceservices;
 
+import org.springframework.data.util.Pair;
 import org.springframework.stereotype.Service;
 import rmm.devices.Device;
 import rmm.devices.DeviceType;
@@ -17,10 +18,11 @@ public class DeviceServicePlanService {
                 .collect(Collectors.groupingBy(Device::getType, Collectors.summingInt(device -> 1)));
 
         // TODO: Still need to add initial cost of devices
+        //      Total deviceCounts values() * some constant $4 i suppose
 
         return servicePlans.stream()
-                .map(DeviceServicePlan::getId)
-                .map(deviceServicePlanId -> (deviceCounts.getOrDefault(deviceServicePlanId.getDeviceType(), 0) * deviceServicePlanId.getPrice()))
+                .map(deviceServicePlanId -> Pair.of(deviceServicePlanId.getDeviceType(), deviceServicePlanId.getPrice()))
+                .map(pair -> (deviceCounts.getOrDefault(pair.getFirst(), 0) * pair.getSecond()))
                 .mapToInt(Integer::intValue)
                 .sum();
     }
