@@ -3,7 +3,7 @@ package rmm.customer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
-import rmm.devices.Device;
+import rmm.customer.customerdevices.CustomerDevice;
 import rmm.deviceservices.DeviceServicePlan;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,14 +25,14 @@ public class Customer implements Serializable {
     private String id;
 
     @OneToMany
-    private List<Device> devices;
+    private List<CustomerDevice> devices;
 
     @OneToMany
     private Set<DeviceServicePlan> services;
 
     @JsonIgnore
     public List<String> getDeviceIds() {
-        return devices.stream().map(Device::getId).collect(Collectors.toList());
+        return devices.stream().map(device -> device.getDevice().getId()).collect(Collectors.toList());
     }
 
     @JsonIgnore

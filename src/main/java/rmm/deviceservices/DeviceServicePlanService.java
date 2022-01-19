@@ -1,7 +1,8 @@
 package rmm.deviceservices;
 
 import org.springframework.stereotype.Service;
-import rmm.devices.Device;
+import rmm.customer.customerdevices.CustomerDevice;
+import rmm.common.Tuple;
 import rmm.devices.DeviceType;
 
 import java.util.List;
@@ -31,11 +32,12 @@ public class DeviceServicePlanService {
         return deviceServicePlanRepository.save(deviceServicePlan);
     }
 
-    public int calculateMonthlyBill(List<Device> devices, Set<DeviceServicePlan> servicePlans) {
+    public int calculateMonthlyBill(List<CustomerDevice> devices, Set<DeviceServicePlan> servicePlans) {
         Map<DeviceType, Integer> deviceCounts = devices.stream()
-                .collect(Collectors.groupingBy(Device::getType, Collectors.summingInt(device -> 1)));
+                .map(customerDevice -> new Tuple(customerDevice.getDevice().getType(), customerDevice.getQuantity()))
+                .collect(Collectors.groupingBy(Tuple::getDeviceType, Collectors.summingInt(Tuple::getQuantity)));
 
-        int totalDeviceQuantity = (deviceCounts.values().stream().mapToInt(Integer::intValue).sum());
+        int totalDeviceQuantity = (devices.stream().map(CustomerDevice::getQuantity).mapToInt(Integer::intValue).sum());
         int maxDeviceCost = totalDeviceQuantity * STANDARD_DEVICE_FEE;
 
         int totalDeviceCost = 0;

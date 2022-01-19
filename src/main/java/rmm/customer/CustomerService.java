@@ -1,5 +1,7 @@
 package rmm.customer;
 
+import rmm.customer.customerdevices.CustomerDevice;
+import rmm.customer.customerdevices.CustomerDeviceRepository;
 import rmm.devices.Device;
 import org.springframework.stereotype.Service;
 import rmm.deviceservices.DeviceServicePlan;
@@ -9,14 +11,17 @@ import rmm.exceptions.NotFoundException;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.IntStream;
 
 @Service
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
+    private final CustomerDeviceRepository customerDeviceRepository;
 
-    public CustomerService(CustomerRepository customerRepository) {
+    public CustomerService(CustomerRepository customerRepository, CustomerDeviceRepository customerDeviceRepository) {
         this.customerRepository = customerRepository;
+        this.customerDeviceRepository = customerDeviceRepository;
     }
 
     public Customer findCustomerById(String customerId) {
@@ -24,7 +29,7 @@ public class CustomerService {
                 .orElseThrow(() -> new NotFoundException("No Customer found by Customer ID: " + customerId));
     }
 
-    public List<Device> findAllDevicesByCustomerId(String customerId) {
+    public List<CustomerDevice> findAllDevicesByCustomerId(String customerId) {
         return findCustomerById(customerId).getDevices();
     }
 
@@ -39,8 +44,10 @@ public class CustomerService {
             throw new NotFoundException("Customer " + customer.getId() + " doesn't contain existing device by id: " + newDevice.getId());
         }
 
-        List<Device> devices = customer.getDevices();
-        devices.forEach(device -> {
+        List<CustomerDevice> devices = customer.getDevices();
+        devices.forEach(customerDevice -> {
+            Device device = customerDevice.getDevice();
+
             if(device.getId().equals(newDevice.getId())) {
                 device.setName(newDevice.getName());
                 device.setType(newDevice.getType());
@@ -52,9 +59,24 @@ public class CustomerService {
     }
 
     public Customer saveNewDevice(Customer customer, Device device) {
-        List<Device> devices = customer.getDevices();
-        devices.add(device);
-        customer.setDevices(devices);
+        List<CustomerDevice> customerDevices = customer.getDevices();
+
+        int index = IntStream.range(0, customerDevices.size())
+                .filter(i -> customerDevices.get(i).getDevice().getId().equals(device.getId()))
+                .findFirst()
+                .orElse(-1);
+
+        if(index != -1) {
+            CustomerDevice customerDevice = customerDevices.get(index);
+            customerDevice.setQuantity(customerDevice.getQuantity() + 1);
+            customerDevices.set(index, customerDevice);
+        } else {
+            CustomerDevice customerDevice = new CustomerDevice(device.getId(), device, 1);
+            customerDeviceRepository.save(customerDevice);
+            customerDevices.add(customerDevice);
+        }
+
+        customer.setDevices(customerDevices);
         return customerRepository.save(customer);
     }
 
@@ -75,7 +97,7 @@ public class CustomerService {
         List<String> deviceIds = customer.getDeviceIds();
 
         if(Objects.nonNull(deviceIds) && !deviceIds.isEmpty() && deviceIds.contains(deviceId)) {
-            List<Device> devices = customer.getDevices();
+            List<CustomerDevice> devices = customer.getDevices();
             devices.removeIf(device -> device.getId().equals(deviceId));
             customer.setDevices(devices);
         } else {

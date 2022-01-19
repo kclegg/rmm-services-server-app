@@ -1,5 +1,6 @@
 package rmm.customer;
 
+import rmm.customer.customerdevices.CustomerDevice;
 import rmm.deviceservices.DeviceServicePlan;
 import rmm.deviceservices.DeviceServicePlanService;
 import rmm.devices.Device;
@@ -31,8 +32,8 @@ public class CustomerController {
     }
 
     @GetMapping(value = "/{customerId}/getDevices")
-    public ResponseEntity<List<Device>> getDevicesByCustomerId(@PathVariable String customerId) {
-        List<Device> devices = customerService.findAllDevicesByCustomerId(customerId);
+    public ResponseEntity<List<CustomerDevice>> getDevicesByCustomerId(@PathVariable String customerId) {
+        List<CustomerDevice> devices = customerService.findAllDevicesByCustomerId(customerId);
         return new ResponseEntity<>(devices, HttpStatus.OK);
     }
 
