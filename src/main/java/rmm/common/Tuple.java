@@ -7,6 +7,6 @@ import rmm.devices.DeviceType;
 @Getter
 @AllArgsConstructor
 public class Tuple {
-    public DeviceType deviceType;
-    public Integer quantity;
+    private final DeviceType deviceType;
+    private final Integer quantity;
 }
